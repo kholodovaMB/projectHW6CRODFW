@@ -1,6 +1,8 @@
 package org.HMB;
 
+import org.HMB.databaseServices.DatabaseInitService;
 import org.HMB.databaseServices.DatabaseQueryService;
+import org.HMB.entities.Client;
 import org.HMB.entitys.querysSQL.*;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -10,54 +12,23 @@ import java.util.Objects;
 public class Main {
     public static void main(String[] args) {
 
-        Connection connection = Database.getInstance().getConnection();
-        DatabaseQueryService service = new DatabaseQueryService(connection);
+        Database database = Database.getInstance();
 
-        List<MaxProjectCountClient> maxProjectsClients = service.findMaxProjectsClient();
-        if (!Objects.isNull(maxProjectsClients)) {
-            for (MaxProjectCountClient client : maxProjectsClients) {
-                System.out.println(client.toString());
-            }
-        } else {
-            System.out.println("result not found");
+        new DatabaseInitService().initDB(database);
+
+        Connection connection = database.getConnection();
+
+        ClientService clientService = new ClientService(connection);
+
+        System.out.println("name = " + clientService.getById(5L));
+
+        clientService.setName(5, "Adidas");
+        clientService.deleteById(6);
+        List<Client> clientList= clientService.listAll();
+        for (Client client: clientList) {
+            System.out.println(client.toString());
         }
-
-        List<MaxSalaryWorker> maxSalaryWorkers = service.findMaxSalaryWorker();
-        if (!Objects.isNull(maxSalaryWorkers)){
-            for (MaxSalaryWorker worker : maxSalaryWorkers) {
-                System.out.println(worker.toString());
-            }
-        } else {
-            System.out.println("result not found");
-        }
-
-
-        List<LongestProject> maxLongestProjects = service.findLongestProject();
-        if (!Objects.isNull(maxLongestProjects)) {
-            for (LongestProject project : maxLongestProjects) {
-                System.out.println(project.toString());
-            }
-        } else {
-            System.out.println("result not found");
-        }
-
-        List<YoungestEldestWorkers> typeWorkers = service.findLYoungestEldestWorkers();
-        if (!Objects.isNull(maxSalaryWorkers)) {
-            for (YoungestEldestWorkers type : typeWorkers) {
-                System.out.println(type.toString());
-            }
-        } else {
-            System.out.println("result not found");
-        }
-
-        List<ProjectsPrices> projectsPrices = service.findProjectPrices();
-        if(!Objects.isNull(projectsPrices)) {
-            for (ProjectsPrices price : projectsPrices) {
-                System.out.println(price.toString());
-            }
-        } else {
-            System.out.println("result not found");
-        }
+        System.out.println("id for new client = " + clientService.create("Reebok"));
 
         try {
             connection.close();
