@@ -4,13 +4,15 @@ import org.HMB.databaseServices.DatabaseInitService;
 import org.HMB.databaseServices.DatabaseQueryService;
 import org.HMB.entities.Client;
 import org.HMB.entitys.querysSQL.*;
+import org.HMB.exception.InvalidDataException;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InvalidDataException {
 
         Database database = Database.getInstance();
 
@@ -23,8 +25,11 @@ public class Main {
         System.out.println("name = " + clientService.getById(5L));
 
         clientService.setName(5, "Adidas");
+
         clientService.deleteById(6);
+
         List<Client> clientList= clientService.listAll();
+
         for (Client client: clientList) {
             System.out.println(client.toString());
         }

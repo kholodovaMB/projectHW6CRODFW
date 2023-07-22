@@ -22,6 +22,7 @@ jar {
         attributes 'Main-Class': 'org.HMB.Main'
     }
     from configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 test {
     useJUnitPlatform()
